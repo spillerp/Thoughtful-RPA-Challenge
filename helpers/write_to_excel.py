@@ -18,7 +18,7 @@ class WriteToExcel:
         try:
             headers = [
                 "Title", "Description", "Author", "Picture Filename",
-                "Search Phrase Count", "Contains Money"
+                "Search Phrase Count", "Words in Phrase Count", "Contains Money"
             ]
             self.lib.append_rows_to_worksheet([headers], self.worksheet)
 
@@ -33,6 +33,13 @@ class WriteToExcel:
                 if img_src:
                     self.image.download_image(img_src, picture_filename, '.jpg')
 
+                search_phrase_words = search_phrase.lower().split()
+                partial_phrase_count = 0
+                if len(search_phrase_words) > 1:
+                    for word in search_phrase_words:
+                        word = r'\b' + re.escape(word) + r'\b'
+                        partial_phrase_count += len(re.findall(word, title.lower()))
+                        partial_phrase_count += len(re.findall(word, description.lower()))
                 search_phrase_count = (
                     title.lower().count(search_phrase.lower()) +
                     description.lower().count(search_phrase.lower())
@@ -48,7 +55,7 @@ class WriteToExcel:
 
                 row = [
                     title, description, author, picture_filename,
-                    search_phrase_count, money_in_text
+                    search_phrase_count, partial_phrase_count, money_in_text
                 ]
                 self.lib.append_rows_to_worksheet([row], self.worksheet)
 
