@@ -18,7 +18,7 @@ logger.info("Initiating Utils")
 data = DataStorage()
 wi = WorkItemManager()
 
-logger.info("Instatiating Web Locators")
+logger.info("Instantiating Web Locators")
 home_search = locators.HOMEPAGE_SEARCH
 search_input = locators.SEARCH_INPUT
 search_btn = locators.SEARCH_BUTTON
@@ -61,7 +61,11 @@ def ExtractNewsData():
         number_of_news = data.get_data("number_of_news")
         news_count = selenium.count_childs(search_results)
         while news_count < number_of_news:
-            selenium.click_button(load_more_btn)
+            try:
+                selenium.click_button(load_more_btn)
+            except:
+                logger.info(f"Only {str(news_count)} news found.")
+                break
             news_count = selenium.count_childs(search_results)
         all_news = selenium.get_info_from_childs(search_results)
         if len(all_news) > number_of_news:
