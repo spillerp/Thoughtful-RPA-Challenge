@@ -38,6 +38,7 @@ def RetrieveInputData():
         data.set_data("number_of_news", number_of_news)
     except Exception as e:
         logger.info(f"Error while retrieving input data: {str(e)}")
+        raise
 
 
 @task
@@ -52,6 +53,7 @@ def WebSearch():
         selenium.wait_for_element(first_result)
     except Exception as e:
         logger.info(f"Error in browser search: {str(e)}")
+        raise
 
 
 @task
@@ -73,6 +75,7 @@ def ExtractNewsData():
         data.set_data("search_results", all_news)
     except Exception as e:
         logger.info(f"Error while extracting news data: {str(e)}")
+        raise
 
 
 @task
@@ -84,3 +87,4 @@ def FillExcel():
         excel.write_news_data(results, search_phrase)
     except Exception as e:
         logger.info(f"Error while filling excel: {str(e)}")
+        raise
